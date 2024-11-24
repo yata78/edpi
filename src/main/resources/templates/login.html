@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post" th:action="@{/login}">
+
+        <th:block th:if="${error}">
+            <div th:text="${error}"></div>
+        </th:block>
+
+        <div>
+            <label for="name">名前</label>
+            <input type="text" class="form-class" id="name" name="name">
+        <div>
+        <div>
+            <label for="email">メールアドレス</label>
+            <input type="email" class="form-class" id="email" name="email">
+        </div>
+        <button type="submit">送信</button>
+    </form>
+</body>
+</html>
