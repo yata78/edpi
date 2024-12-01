@@ -38,7 +38,7 @@ public class LoginController {
     public ModelAndView login(ModelAndView mav, @RequestParam String name, @RequestParam String email) {
         // 名前とパスワードで分岐
         // 後々DBから取得する
-        if (("system".equals(name)) || ("system@example.jp".equals(email))) {
+        if (("system".equals(name)) && ("system@example.jp".equals(email))) {
             mav.setViewName("index");
             this.session.setAttribute("name", name);
             this.session.setAttribute("email", email);

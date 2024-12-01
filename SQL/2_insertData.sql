@@ -1,0 +1,1 @@
+INSERT INTO m_user VALUES(1 , 'system' , 'system@example.jp' );

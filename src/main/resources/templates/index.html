@@ -6,6 +6,9 @@
     <title>Document</title>
 </head>
 <body>
+
+    <div th:replace="header"></div>
+
     <h1 th:text="${name}"></h1>
     <h1 th:text="${email}"></h1>
 
@@ -27,5 +30,9 @@
             </tr>
         </tbody>
     </table>
+
+    <form method="get" th:action="@{/editUser}">
+        <button>プロフィール編集</button>
+    </form>
 </body>
 </html>
