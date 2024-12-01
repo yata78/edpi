@@ -8,5 +8,18 @@
 <body>
     <p>画面遷移テスト</p>
     <h1 th:text="${userName}"></h1>
+    <h1 th:text="${email}"></h1>
+
+    <form method="post" action="/editUser" th:object="${user}">
+        <label for="userName">名前
+            <input type="text" id="userName" name="userName" th:value="*{userName}">
+        </label>
+
+        <label for="email">メールアドレス
+            <input type="email" id="email" name="email" th:value="*{email}" />
+        </label>
+
+        <input type="submit" value="送信"></input>
+    </form>
 </body>
 </html>
