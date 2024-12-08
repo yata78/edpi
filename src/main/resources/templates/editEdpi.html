@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +7,11 @@
 </head>
 <body>
 
-    <div th:replace="header"></div>
-
     <table>
         <thead>
             <tr>
-                <th>ゲーム内感度</th>
-                <th>dpi</th>
-                <th>戦績登録</th>
+                <th>勝敗</th>
+                <th>HS率</th>
             </tr>
         </thead>
         <tbody>
@@ -28,9 +25,22 @@
         </tbody>
     </table>
 
-    <form method="get" th:action="@{/editUser}">
-        <button>プロフィール編集</button>
+
+
+    <h3>戦績登録</h3>
+
+    <form method="post" action="/editUser">
+        <label>勝敗
+            <select name="win-lose" id="win-lose">
+                <option value="">--勝敗を選んでください--</option>
+                <option value="1">win</option>
+                <option value="2">lose</option>
+            </select>
+        </label>
+        <label>HS率
+            <input type="number" min="0" max="100">
+        </label>
+        <button type="submit">送信</button>
     </form>
-    <!-- edpiを追加するボタン作成-->
 </body>
 </html>

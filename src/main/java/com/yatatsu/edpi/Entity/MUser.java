@@ -1,6 +1,5 @@
 package com.yatatsu.edpi.Entity;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,5 +21,6 @@ public class MUser {
     @Column(name="user_name")
     private String userName;
 
+    @Column(name="email")
     private String email;
 }

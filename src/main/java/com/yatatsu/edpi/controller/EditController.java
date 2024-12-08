@@ -50,5 +50,12 @@ public class EditController {
         mav.setViewName("editProfile");
         return mav;
     }
+
+    @PostMapping("/editEdpi/{id}")
+    public ModelAndView editDpi(ModelAndView mav) {
+        mav.setViewName("editEdpi");
+        return mav;
+    }
+    
     
 }
