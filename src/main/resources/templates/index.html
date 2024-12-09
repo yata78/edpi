@@ -19,7 +19,7 @@
         </thead>
         <tbody>
             <tr th:each="users : ${dpi}">
-                <form method="post" th:action="@{/editEdpi/{id}(id=${users.dpiId})}">
+                <form method="get" th:action="@{/editEdpi/{id}(id=${users.dpiId})}">
                     <td th:text="${users.sensitivity}"></td>
                     <td th:text="${users.dpi}"></td>
                     <td><button type="submit">編集</button></td>

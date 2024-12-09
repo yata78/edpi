@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yatatsu.edpi.Entity.MUser;
@@ -51,11 +52,17 @@ public class EditController {
         return mav;
     }
 
-    @PostMapping("/editEdpi/{id}")
-    public ModelAndView editDpi(ModelAndView mav) {
+    @GetMapping("/editEdpi/{id}")
+    public ModelAndView showDpi(ModelAndView mav) {
         mav.setViewName("editEdpi");
         return mav;
     }
     
+    @PostMapping("/editEdpi/{id}")
+    public ModelAndView editDpi(ModelAndView mav, @PathVariable String dpiId) {
+        mav.addObject("dpiId", dpiId);
+        mav.setViewName("editEdpi");
+        return mav;
+    }
     
 }

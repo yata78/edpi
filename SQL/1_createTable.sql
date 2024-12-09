@@ -5,8 +5,6 @@ CREATE TABLE m_user (
     PRIMARY KEY (user_id)
 );
 
-DROP TABLE users_dpi;
-
 CREATE TABLE users_dpi (
     dpi_id integer,
     user_id integer,
@@ -20,7 +18,7 @@ CREATE TABLE m_match (
     match_id integer,
     dpi_id integer,
     user_id integer,
-    win_lose boolean,
-    hs_rate smallint
+    isWin boolean,
+    hs_rate smallint,
     PRIMARY KEY (match_id)
-)
+);

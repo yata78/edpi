@@ -16,7 +16,8 @@
         </thead>
         <tbody>
             <tr th:each="users : ${dpi}">
-                <form method="post" th:action="@{/editEdpi/{id}(id=${users.dpiId})}">
+                <form method="get" th:action="@{/editEdpi/{id}(id=${users.dpiId})}">
+                    <input type="hidden" id="dpiId" name="dpiId" th:value=${users.dpiId}/>
                     <td th:text="${users.sensitivity}"></td>
                     <td th:text="${users.dpi}"></td>
                     <td><button type="submit">編集</button></td>
@@ -29,7 +30,7 @@
 
     <h3>戦績登録</h3>
 
-    <form method="post" action="/editUser">
+    <form method="post" action="/editEdpi/{id}(id=${dpiId})">
         <label>勝敗
             <select name="win-lose" id="win-lose">
                 <option value="">--勝敗を選んでください--</option>
