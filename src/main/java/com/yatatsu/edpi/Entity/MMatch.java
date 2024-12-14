@@ -24,7 +24,7 @@ public class MMatch {
     @Column(name="user_id")
     private Integer userId;
 
-    @Column(name="isWin")
+    @Column(name="iswin")
     private boolean isWin;
 
     @Column(name="hs_rate")

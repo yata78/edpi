@@ -15,15 +15,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="users : ${dpi}">
-                <form method="get" th:action="@{/editEdpi/{id}(id=${users.dpiId})}">
-                    <input type="hidden" id="dpiId" name="dpiId" th:value=${users.dpiId}/>
-                    <td th:text="${users.sensitivity}"></td>
-                    <td th:text="${users.dpi}"></td>
-                    <td><button type="submit">編集</button></td>
-                </form>
+            <tr th:each="match : ${matchList}">
+                <td th:text="${match.isWin}"></td>
+                <td th:text="${match.hsRate}"></td>
+                <td><button type="submit">編集</button></td>
             </tr>
         </tbody>
+
+        <p th:text="${id}"></p>
     </table>
 
 

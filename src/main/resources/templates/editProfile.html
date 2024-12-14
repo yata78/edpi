@@ -6,9 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    <p>画面遷移テスト</p>
-    <h1 th:text="${userName}"></h1>
-    <h1 th:text="${email}"></h1>
 
     <form method="post" action="/editUser" th:object="${user}">
         <label for="userName">名前
