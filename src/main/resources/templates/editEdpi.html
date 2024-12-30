@@ -16,13 +16,12 @@
         </thead>
         <tbody>
             <tr th:each="match : ${matchList}">
-                <td th:text="${match.isWin}"></td>
+                <td th:text="${match.isWin ? '勝' : '負'}"></td>
                 <td th:text="${match.hsRate}"></td>
                 <td><button type="submit">編集</button></td>
             </tr>
         </tbody>
 
-        <p th:text="${id}"></p>
     </table>
 
 
@@ -31,15 +30,16 @@
 
     <form method="post" action="/editEdpi/{id}(id=${dpiId})">
         <label>勝敗
-            <select name="win-lose" id="win-lose">
+            <select name="winLose" id="winLose">
                 <option value="">--勝敗を選んでください--</option>
                 <option value="1">win</option>
                 <option value="2">lose</option>
             </select>
         </label>
         <label>HS率
-            <input type="number" min="0" max="100">
+            <input type="number" min="0" max="100" id="hsRate" name="hsRate">
         </label>
+        <input type="hidden" name="dpiId" th:value="${dpiId}">
         <button type="submit">送信</button>
     </form>
 </body>

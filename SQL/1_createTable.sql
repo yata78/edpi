@@ -15,7 +15,7 @@ CREATE TABLE users_dpi (
 );
 
 CREATE TABLE m_match (
-    match_id integer,
+    match_id serial NOT NULL,
     dpi_id integer,
     user_id integer,
     isWin boolean,

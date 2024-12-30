@@ -14,7 +14,6 @@
             <tr>
                 <th>ゲーム内感度</th>
                 <th>dpi</th>
-                <th>戦績登録</th>
             </tr>
         </thead>
         <tbody>
@@ -22,7 +21,8 @@
                 <form method="get" th:action="@{/editEdpi/{id}(id=${users.dpiId})}">
                     <td th:text="${users.sensitivity}"></td>
                     <td th:text="${users.dpi}"></td>
-                    <td><button type="submit">編集</button></td>
+                    <input type="hidden" name="dpiId" th:value="${users.dpiId}">
+                    <td><button type="submit">戦績登録</button></td>
                 </form>
             </tr>
         </tbody>
