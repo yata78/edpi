@@ -16,7 +16,7 @@ public class MUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
-    private long userId;
+    private Integer userId;
 
     @Column(name="user_name")
     private String userName;

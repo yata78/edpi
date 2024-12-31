@@ -6,6 +6,22 @@
     <title>Document</title>
 </head>
 <body>
+
+    <div>
+
+        <form method="post" th:action="@{/signup}">
+            <label for="userName">名前
+                <input type="text" id="userName" name="userName">
+            </label>
+
+            <label for="email">メールアドレス
+                <input type="email" id="email" name="email">
+            </label>
+
+            <button type="submit">新規ユーザ登録</button>
+        </form>
+
+    </div>
     
 </body>
 </html>

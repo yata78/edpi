@@ -33,7 +33,7 @@ public class EditUserController {
     
     @GetMapping("/editUser")
     public ModelAndView editUser(ModelAndView mav) {
-        Optional<MUser> data = userRepository.findById((Integer)session.getAttribute("userId"));
+        Optional<MUser> data = userRepository.findById((String)session.getAttribute("userId"));
         MUser user = data.get();
         //TODO:テーブルから取得する情報の吟味
         mav.addObject("user", user);
@@ -45,7 +45,7 @@ public class EditUserController {
     @PostMapping("/editUser")
     public ModelAndView postMethodName(@ModelAttribute MUser user, ModelAndView mav, @RequestParam String userName, @RequestParam String email) {
         userRepository.updateData(userName, email);
-        Optional<MUser> data = userRepository.findById((Integer)session.getAttribute("userId"));
+        Optional<MUser> data = userRepository.findById((String)session.getAttribute("userId"));
         MUser updateUser = data.get();
         mav.addObject("user", updateUser);
         mav.setViewName("editProfile");
