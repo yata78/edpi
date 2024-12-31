@@ -17,7 +17,7 @@
         <tbody>
             <tr th:each="match : ${matchList}">
                 <td th:text="${match.isWin ? '勝' : '負'}"></td>
-                <td th:text="${match.hsRate}"></td>
+                <td th:text="${match.hsRate} + '%'" ></td>
                 <td><button type="submit">編集</button></td>
             </tr>
         </tbody>

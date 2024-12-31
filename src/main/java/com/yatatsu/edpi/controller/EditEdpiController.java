@@ -41,6 +41,8 @@ public class EditEdpiController {
     // EDPIの勝敗とHS率を登録している
     @PostMapping("/editEdpi/{id}")
     public ModelAndView editDpi(ModelAndView mav, @RequestParam String dpiId, @RequestParam String winLose , @RequestParam Integer hsRate) {
+        
+        // 試合の結果を登録(勝敗とHS率)
         MMatch registMatch = new MMatch();
         registMatch.setDpiId(Integer.parseInt(dpiId));
         registMatch.setHsRate(hsRate);
@@ -51,8 +53,11 @@ public class EditEdpiController {
             registMatch.setWin(false);
         }
         matchRepository.saveAndFlush(registMatch);
+
+        // 表示のために試合データを取得
         List<MMatch> mMatch = matchRepository.findByMatchIdAndUserId(Integer.parseInt(dpiId), (Integer)session.getAttribute("userId"));
         mav.addObject("matchList", mMatch);
+
         mav.setViewName("editEdpi");
         return mav;
         
