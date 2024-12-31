@@ -65,7 +65,7 @@ public class LoginController {
                 for (UsersDpi d : dpi) {
                     
                     //勝率とHS率を取得
-                    String winRate =  matchRepository.countMatch(d.getDpiId()) != null ? String.format("%.1f", ((double)matchRepository.countWinMatch(d.getDpiId()) / matchRepository.countMatch(d.getDpiId())) * 100) : "0";
+                    String winRate =  matchRepository.countMatch(d.getDpiId()) > 0 ? String.format("%.1f", ((double)matchRepository.countWinMatch(d.getDpiId()) / matchRepository.countMatch(d.getDpiId())) * 100) : "0";
                     String hsRate = matchRepository.getAvgHsRate(d.getDpiId()) != null ? String.format("%.1f" ,matchRepository.getAvgHsRate(d.getDpiId())) : "0";
                     
                     dpiList.add(Map.of(

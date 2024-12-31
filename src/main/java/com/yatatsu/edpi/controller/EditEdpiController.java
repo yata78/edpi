@@ -28,9 +28,9 @@ public class EditEdpiController {
 
 
     @GetMapping("/editEdpi/{id}")
-    public ModelAndView showDpi(ModelAndView mav, @PathVariable Integer id, @RequestParam String dpiId) {
+    public ModelAndView showDpi(ModelAndView mav, @RequestParam String dpiId) {
 
-        List<MMatch> mMatch = matchRepository.findByMatchIdAndUserId(id, (Integer)session.getAttribute("userId"));
+        List<MMatch> mMatch = matchRepository.findByMatchIdAndUserId(Integer.parseInt(dpiId), (Integer)session.getAttribute("userId"));
         mav.addObject("dpiId", dpiId);
         mav.addObject("matchList", mMatch);
         mav.addObject("id", session.getAttribute("userId"));
@@ -62,5 +62,21 @@ public class EditEdpiController {
         return mav;
         
     }
+
+    //登録した試合データを削除
+    @GetMapping("deleteMatch/{matchId}")
+    public ModelAndView deleteMatch(ModelAndView mav , @PathVariable Integer matchId , @RequestParam String dpiId) {
+        //削除処理
+        matchRepository.deleteById(matchId);
+
+        // 表示のために試合データを取得
+        List<MMatch> mMatch = matchRepository.findByMatchIdAndUserId(Integer.parseInt(dpiId), (Integer)session.getAttribute("userId"));
+        mav.addObject("dpiId", dpiId);
+        mav.addObject("matchList", mMatch);
+        mav.addObject("id", session.getAttribute("userId"));
+        mav.setViewName("editEdpi");
+        return mav;
+    }
+    
 
 }

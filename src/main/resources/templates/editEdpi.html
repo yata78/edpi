@@ -16,9 +16,12 @@
         </thead>
         <tbody>
             <tr th:each="match : ${matchList}">
-                <td th:text="${match.isWin ? '勝' : '負'}"></td>
-                <td th:text="${match.hsRate} + '%'" ></td>
-                <td><button type="submit">編集</button></td>
+                <form method="get" th:action="@{/deleteMatch/{matchId}(matchId=${match.matchId})}">
+                    <td th:text="${match.isWin ? '勝' : '負'}"></td>
+                    <td th:text="${match.hsRate} + '%'" ></td>
+                    <input type="hidden" name="dpiId" th:value="${dpiId}"/>
+                    <td><button type="submit">削除</button></td>
+                </form>
             </tr>
         </tbody>
 
@@ -40,7 +43,7 @@
             <input type="number" min="0" max="100" id="hsRate" name="hsRate">
         </label>
         <input type="hidden" name="dpiId" th:value="${dpiId}">
-        <button type="submit">送信</button>
+        <button type="submit">登録</button>
     </form>
 </body>
 </html>
