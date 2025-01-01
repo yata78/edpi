@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -19,8 +21,11 @@ public class MUser {
     private Integer userId;
 
     @Column(name="user_name")
+    @NotNull
     private String userName;
 
     @Column(name="email")
+    @NotNull
+    @Email
     private String email;
 }

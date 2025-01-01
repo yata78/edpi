@@ -1,5 +1,6 @@
 package com.yatatsu.edpi.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -10,20 +11,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yatatsu.edpi.Entity.MMatch;
+import com.yatatsu.edpi.Entity.UsersDpi;
+import com.yatatsu.edpi.repository.DpiRepository;
 import com.yatatsu.edpi.repository.MatchRepository;
 import com.yatatsu.edpi.repository.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class EditEdpiController {
     
     HttpSession session;
     MatchRepository matchRepository;
+    DpiRepository dpiRepository;
 
-    public EditEdpiController(HttpSession session, UserRepository userRepository, MatchRepository matchRepository) {
+    public EditEdpiController(HttpSession session, UserRepository userRepository, MatchRepository matchRepository , DpiRepository dpiRepository) {
         this.session = session;
         this.matchRepository = matchRepository;
+        this.dpiRepository = dpiRepository;
     }
 
 
@@ -75,6 +82,28 @@ public class EditEdpiController {
         mav.addObject("matchList", mMatch);
         mav.addObject("id", session.getAttribute("userId"));
         mav.setViewName("editEdpi");
+        return mav;
+    }
+    
+    //EDPIの組み合わせを登録
+    @GetMapping("/registEdpi")
+    public ModelAndView registEdpi(ModelAndView mav) {
+        mav.setViewName("registEdpi");
+        return mav;
+    }
+
+    @PostMapping("/registEdpi")
+    public ModelAndView registEdpi(ModelAndView mav, @RequestParam Integer dpi, @RequestParam BigDecimal sensitivity) {
+        
+        UsersDpi edpi = new UsersDpi();
+        edpi.setDpi(dpi);
+        edpi.setSensitivity(sensitivity);
+        edpi.setUserId((Integer)session.getAttribute("userId"));
+
+        dpiRepository.saveAndFlush(edpi);
+        
+        mav.setViewName("registEdpi");
+
         return mav;
     }
     

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.yatatsu.edpi.Entity.MUser;
 
 @Repository
-public interface UserRepository extends JpaRepository<MUser , String> {
+public interface UserRepository extends JpaRepository<MUser , Integer> {
 
     @Query(value = "SELECT * FROM m_user WHERE user_id = ?1", nativeQuery = true)
     Optional<MUser> findById(Integer id);
