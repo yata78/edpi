@@ -2,6 +2,8 @@ package com.yatatsu.edpi.Entity;
 
 import java.math.BigDecimal;
 
+import org.hibernate.validator.constraints.Range;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,17 +25,16 @@ public class UsersDpi {
     private Integer dpiId;
 
     @Column(name="user_id")
-    @NotNull
     private Integer userId;
 
     @Column(name="dpi")
-    @Size(min=0, max=5000)
+    @Range(min = 0, max = 5000, message = "0から5000までの値を入力してください。")
     @NotNull
     private Integer dpi;
 
     @Column(name="sensitivity")
     @NotNull
-    @Size(min=0, max = 10)
+    @Range(min = 0, max = 10, message = "0から10までの値を入力してください。")
     private BigDecimal sensitivity;
     
 }

@@ -98,17 +98,23 @@ public class EditEdpiController {
     
     //EDPIの組み合わせを登録
     @GetMapping("/registEdpi")
-    public ModelAndView registEdpi(ModelAndView mav) {
+    public ModelAndView registEdpi(ModelAndView mav, @ModelAttribute("UsersDpi") UsersDpi usersDpi) {
         mav.setViewName("registEdpi");
         return mav;
     }
 
     @PostMapping("/registEdpi")
-    public ModelAndView registEdpi(ModelAndView mav, @RequestParam Integer dpi, @RequestParam BigDecimal sensitivity) {
+    public ModelAndView registEdpi(ModelAndView mav, @ModelAttribute("UsersDpi") @Validated UsersDpi usersDpi, BindingResult bindingResult) {
+        
+        //バリデーションチェック
+        if(bindingResult.hasErrors()) {
+            mav.setViewName("registEdpi");
+            return mav;
+        }
         
         UsersDpi edpi = new UsersDpi();
-        edpi.setDpi(dpi);
-        edpi.setSensitivity(sensitivity);
+        edpi.setDpi(usersDpi.getDpi());
+        edpi.setSensitivity(usersDpi.getSensitivity());
         edpi.setUserId((Integer)session.getAttribute("userId"));
 
         dpiRepository.saveAndFlush(edpi);

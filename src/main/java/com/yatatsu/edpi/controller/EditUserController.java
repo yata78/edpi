@@ -3,6 +3,8 @@ package com.yatatsu.edpi.controller;
 import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,19 +34,26 @@ public class EditUserController {
     }
     
     @GetMapping("/editUser")
-    public ModelAndView editUser(ModelAndView mav) {
+    public ModelAndView editUser(ModelAndView mav, @ModelAttribute("MUser") MUser mUser) {
         Optional<MUser> data = userRepository.findById((Integer)session.getAttribute("userId"));
-        MUser user = data.get();
+        MUser registUser = data.get();
         //TODO:テーブルから取得する情報の吟味
-        mav.addObject("user", user);
+        mav.addObject("user", registUser);
         mav.setViewName("editProfile");
         return mav;
     }
 
     @Transactional
     @PostMapping("/editUser")
-    public ModelAndView postMethodName(@ModelAttribute MUser user, ModelAndView mav, @RequestParam String userName, @RequestParam String email) {
-        userRepository.updateData(userName, email);
+    public ModelAndView postMethodName(@ModelAttribute("MUser") @Validated MUser mUser, BindingResult bindingResult, ModelAndView mav) {
+
+        //バリデーションチェック
+        if (bindingResult.hasErrors()) {
+            mav.setViewName("editProfile");
+            return mav;
+        }
+
+        userRepository.updateData(mUser.getUserName(), mUser.getEmail());
         Optional<MUser> data = userRepository.findById((Integer)session.getAttribute("userId"));
         MUser updateUser = data.get();
         mav.addObject("user", updateUser);

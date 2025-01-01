@@ -4,22 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
 </head>
 <body>
 
-    <form method="post" action="/editUser" th:object="${user}">
+    <form method="post" th:action="@{/editUser}" th:object="${MUser}">
         <label for="userName">名前
-            <input type="text" id="userName" name="userName" th:value="*{userName}">
+            <input type="text" id="userName" name="userName" th:value="*{userName}" th:field="*{userName}">
         </label>
+        <p th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
 
         <label for="email">メールアドレス
-            <input type="email" id="email" name="email" th:value="*{email}" />
+            <input type="email" id="email" name="email" th:value="*{email}" th:field="*{email}"/>
         </label>
+        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
 
         <input type="submit" value="送信"></input>
     </form>
-
-    <button class="like-button" data-id="1">いいね</button>
 </body>
-<script src="/js/sample.js"></script>
 </html>
