@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,17 +31,20 @@
 
     <h3>戦績登録</h3>
 
-    <form method="post" action="/editEdpi/{id}(id=${dpiId})">
+    <form method="post" th:action="@{/editEdpi/{dpiId}(dpiId=${dpiId})}" th:object="${MMatch}">
         <label>勝敗
             <select name="winLose" id="winLose">
-                <option value="">--勝敗を選んでください--</option>
                 <option value="1">win</option>
                 <option value="2">lose</option>
             </select>
         </label>
-        <label>HS率
-            <input type="number" min="0" max="100" id="hsRate" name="hsRate">
-        </label>
+
+        <div>
+            <label>HS率
+                <input type="number" min="0" max="100" id="hsRate" name="hsRate" th:field="*{hsRate}">
+            </label>
+            <p th:if="${#fields.hasErrors('hsRate')}" th:errors="*{hsRate}" style="color: red;" ></p>
+        </div>
         <input type="hidden" name="dpiId" th:value="${dpiId}">
         <button type="submit">登録</button>
     </form>

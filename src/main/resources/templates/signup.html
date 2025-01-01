@@ -9,13 +9,15 @@
 
     <div>
 
-        <form method="post" th:action="@{/signup}">
+        <form method="post" th:action="@{/signup}" th:object="${MUser}">
             <label for="userName">名前
                 <input type="text" id="userName" name="userName">
+                <p th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
             </label>
 
             <label for="email">メールアドレス
                 <input type="email" id="email" name="email">
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
             </label>
 
             <button type="submit">新規ユーザ登録</button>

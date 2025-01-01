@@ -6,23 +6,23 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="post" th:action="@{/login}">
-
+    <form method="post" th:action="@{/login}" th:object="${MUser}">
         <th:block th:if="${error}">
-            <div th:text="${error}"></div>
+            <div style="color: red;" th:text="${error}"></div>
         </th:block>
-
+    
         <div>
-            <label for="name">ユーザID</label>
-            <input type="text" class="form-class" id="userId" name="userId">
-        <div>
+            <label for="userId">ユーザーID</label>
+            <input type="text" id="userId" name="userId" th:field="*{userId}">
+            <p th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></p>
+        </div>
         <div>
             <label for="email">メールアドレス</label>
-            <input type="email" class="form-class" id="email" name="email">
+            <input type="email" id="email" name="email" th:field="*{email}">
+            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;" ></p>
         </div>
         <button type="submit">ログイン</button>
     </form>
-
 
     <form method="get" th:action="@{/signup}">
         <button type="submit">新規登録</button>

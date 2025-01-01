@@ -3,7 +3,10 @@ package com.yatatsu.edpi.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,13 +39,20 @@ public class SignUpController {
     }
 
     @PostMapping("/signup")
-    public ModelAndView signUpUser(ModelAndView mav,@RequestParam String userName, @RequestParam String email) {
-        MUser user = new MUser();
+    public ModelAndView signUpUser(ModelAndView mav,@ModelAttribute("MUser") @Validated MUser user, BindingResult bindingResult) {
 
-        user.setUserName(userName);
-        user.setEmail(email);
+        //バリデーションチェック
+        if(bindingResult.hasErrors()) {
+            mav.setViewName("signup");
+            return mav;
+        }
+
+        MUser signUpUser = new MUser();
+
+        signUpUser.setUserName(user.getUserName());
+        signUpUser.setEmail(user.getEmail());
         
-        userRepository.saveAndFlush(user);
+        userRepository.saveAndFlush(signUpUser);
         mav.setViewName("login");
         return mav;
     }

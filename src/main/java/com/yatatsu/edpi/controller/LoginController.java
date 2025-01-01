@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +21,7 @@ import com.yatatsu.edpi.repository.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -39,26 +42,37 @@ public class LoginController {
     }
     
     @RequestMapping("/")
-    public ModelAndView login(ModelAndView mav) {
+    public ModelAndView getLogin(ModelAndView mav,@ModelAttribute("MUser") MUser user) {
         mav.setViewName("login");
         return mav;
     }
 
     @PostMapping("/login")
-    public ModelAndView login(ModelAndView mav, @RequestParam Integer userId, @RequestParam String email) {
+    public ModelAndView postLogin(ModelAndView mav,@ModelAttribute("MUser") @Validated MUser user, BindingResult bindingResult) {
+        
+        //バリデーションチェック
+        if(bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getAllErrors());
+            mav.setViewName("login");
+            return mav;
+        }
+        
         // idとパスワードで分岐
-        Optional<MUser> data = userRepository.findById(userId);
-        MUser user = data.get();
+
+        System.out.println(user.getUserId());
+
+        Optional<MUser> data = userRepository.findById(user.getUserId());
+        MUser Loginuser = data.get();
 
         //userが取得出来たら
-        if (!user.equals("NULL") && user.getEmail().equals(email)) {
+        if (!user.equals("NULL") && Loginuser.getEmail().equals(user.getEmail())) {
                 mav.setViewName("index");
-                this.session.setAttribute("userId", userId);
-                this.session.setAttribute("email", email);
+                this.session.setAttribute("userId", user.getUserId());
+                this.session.setAttribute("email", user.getEmail());
 
 
                 //dpi・ゲーム内感度・勝率・HS率を取得
-                List<UsersDpi> dpi = dpiRepository.findByUserId(userId);
+                List<UsersDpi> dpi = dpiRepository.findByUserId(user.getUserId());
                 
                 List<Map<String,Object>> dpiList = new ArrayList<>();
 

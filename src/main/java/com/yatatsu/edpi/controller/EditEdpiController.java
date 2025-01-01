@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,11 +38,11 @@ public class EditEdpiController {
 
 
     @GetMapping("/editEdpi/{id}")
-    public ModelAndView showDpi(ModelAndView mav, @RequestParam String dpiId) {
+    public ModelAndView showDpi(ModelAndView mav, @RequestParam String dpiId, @ModelAttribute("MMatch") MMatch mMatch) {
 
-        List<MMatch> mMatch = matchRepository.findByMatchIdAndUserId(Integer.parseInt(dpiId), (Integer)session.getAttribute("userId"));
+        List<MMatch> getMMatch = matchRepository.findByMatchIdAndUserId(Integer.parseInt(dpiId), (Integer)session.getAttribute("userId"));
         mav.addObject("dpiId", dpiId);
-        mav.addObject("matchList", mMatch);
+        mav.addObject("matchList", getMMatch);
         mav.addObject("id", session.getAttribute("userId"));
         mav.setViewName("editEdpi");
         return mav;
@@ -47,12 +50,20 @@ public class EditEdpiController {
     
     // EDPIの勝敗とHS率を登録している
     @PostMapping("/editEdpi/{id}")
-    public ModelAndView editDpi(ModelAndView mav, @RequestParam String dpiId, @RequestParam String winLose , @RequestParam Integer hsRate) {
+    public ModelAndView editDpi(ModelAndView mav, @RequestParam String winLose, @ModelAttribute("MMatch") @Validated MMatch mMatch, BindingResult bindingResult) {
+
+        //バリデーションチェック
+        if (bindingResult.hasErrors()) {
+            List<MMatch> getMMatch = matchRepository.findByMatchIdAndUserId(mMatch.getDpiId(), (Integer)session.getAttribute("userId"));
+            mav.addObject("matchList", getMMatch);
+            mav.setViewName("editEdpi");
+            return mav;
+        }
         
         // 試合の結果を登録(勝敗とHS率)
         MMatch registMatch = new MMatch();
-        registMatch.setDpiId(Integer.parseInt(dpiId));
-        registMatch.setHsRate(hsRate);
+        registMatch.setDpiId(mMatch.getDpiId());
+        registMatch.setHsRate(mMatch.getHsRate());
         registMatch.setUserId((Integer)session.getAttribute("userId"));
         if(winLose.equals("1")) {
             registMatch.setWin(true);
@@ -62,8 +73,8 @@ public class EditEdpiController {
         matchRepository.saveAndFlush(registMatch);
 
         // 表示のために試合データを取得
-        List<MMatch> mMatch = matchRepository.findByMatchIdAndUserId(Integer.parseInt(dpiId), (Integer)session.getAttribute("userId"));
-        mav.addObject("matchList", mMatch);
+        List<MMatch> getMMatch = matchRepository.findByMatchIdAndUserId(mMatch.getDpiId(), (Integer)session.getAttribute("userId"));
+        mav.addObject("matchList", getMMatch);
 
         mav.setViewName("editEdpi");
         return mav;

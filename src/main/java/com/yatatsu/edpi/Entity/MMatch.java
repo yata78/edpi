@@ -1,12 +1,16 @@
 package com.yatatsu.edpi.Entity;
 
 
+import org.hibernate.validator.constraints.Range;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -23,11 +27,9 @@ public class MMatch {
     private Integer matchId;
 
     @Column(name="dpi_id")
-    @NotNull
     private Integer dpiId;
     
     @Column(name="user_id")
-    @NotNull
     private Integer userId;
 
     @Column(name="iswin")
@@ -36,7 +38,7 @@ public class MMatch {
 
     @Column(name="hs_rate")
     @NotNull
-    @Size(min=0, max=100)
+    @Range(min = 0, max = 100, message = "0から100までの値を入力してください。")
     private Integer hsRate;
 
 }
