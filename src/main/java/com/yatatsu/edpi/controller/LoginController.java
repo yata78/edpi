@@ -60,39 +60,40 @@ public class LoginController {
         // idとパスワードで分岐
 
         System.out.println(user.getUserId());
-
+        
         Optional<MUser> data = userRepository.findById(user.getUserId());
         MUser Loginuser = data.get();
 
-        //userが取得出来たら
-        if (!user.equals("NULL") && Loginuser.getEmail().equals(user.getEmail())) {
-                mav.setViewName("index");
-                this.session.setAttribute("userId", user.getUserId());
-                this.session.setAttribute("email", user.getEmail());
+        try {
+            //DBからユーザを取得できた場合
+            mav.setViewName("index");
+            this.session.setAttribute("userId", user.getUserId());
+            this.session.setAttribute("email", user.getEmail());
 
 
-                //dpi・ゲーム内感度・勝率・HS率を取得
-                List<UsersDpi> dpi = dpiRepository.findByUserId(user.getUserId());
+            //dpi・ゲーム内感度・勝率・HS率を取得
+            List<UsersDpi> dpi = dpiRepository.findByUserId(user.getUserId());
+            
+            List<Map<String,Object>> dpiList = new ArrayList<>();
+
+            for (UsersDpi d : dpi) {
                 
-                List<Map<String,Object>> dpiList = new ArrayList<>();
+                //勝率とHS率を取得
+                String winRate =  matchRepository.countMatch(d.getDpiId()) > 0 ? String.format("%.1f", ((double)matchRepository.countWinMatch(d.getDpiId()) / matchRepository.countMatch(d.getDpiId())) * 100) : "0";
+                String hsRate = matchRepository.getAvgHsRate(d.getDpiId()) != null ? String.format("%.1f" ,matchRepository.getAvgHsRate(d.getDpiId())) : "0";
+                
+                dpiList.add(Map.of(
+                    "dpiId" , d.getDpiId(),
+                    "dpi"   , d.getDpi(),
+                    "sensitivity" , d.getSensitivity(),
+                    "winRate" , winRate,
+                    "hsRate" , hsRate 
+                ));
+            }
 
-                for (UsersDpi d : dpi) {
-                    
-                    //勝率とHS率を取得
-                    String winRate =  matchRepository.countMatch(d.getDpiId()) > 0 ? String.format("%.1f", ((double)matchRepository.countWinMatch(d.getDpiId()) / matchRepository.countMatch(d.getDpiId())) * 100) : "0";
-                    String hsRate = matchRepository.getAvgHsRate(d.getDpiId()) != null ? String.format("%.1f" ,matchRepository.getAvgHsRate(d.getDpiId())) : "0";
-                    
-                    dpiList.add(Map.of(
-                        "dpiId" , d.getDpiId(),
-                        "dpi"   , d.getDpi(),
-                        "sensitivity" , d.getSensitivity(),
-                        "winRate" , winRate,
-                        "hsRate" , hsRate 
-                    ));
-                }
-
-                mav.addObject("dpiList", dpiList);
-        } else {
+            mav.addObject("dpiList", dpiList);
+        } catch (Exception e) {
+            //DBからユーザを取得できなかった場合
             mav.setViewName("login");
             mav.addObject("error", "名前もしくはパスワードが違います。");
         }

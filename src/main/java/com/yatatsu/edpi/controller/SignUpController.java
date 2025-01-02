@@ -32,6 +32,12 @@ public class SignUpController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/signup")
+    public ModelAndView movePageToSignUpUser(ModelAndView mav, @ModelAttribute("MUser") MUser user) {
+        mav.setViewName("signup");
+        return mav;
+    }
+
     @PostMapping("/signup")
     public ModelAndView signUpUser(ModelAndView mav,@ModelAttribute("MUser") @Validated MUser user, BindingResult bindingResult) {
 

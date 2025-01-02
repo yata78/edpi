@@ -14,6 +14,7 @@
     
     <div class="login">
         <div class="form">
+            
             <form method="post" th:action="@{/login}" th:object="${MUser}">
                 <th:block th:if="${error}">
                     <div style="color: red;" th:text="${error}"></div>
@@ -34,9 +35,9 @@
             </form>
 
             <div class="signup">
-                <p><a th:href="@{/registEdpi}">新規登録</a>はこちら</p>
-
+                <p><a th:href="@{/signup}">新規登録</a>はこちら</p>
             </div>
+
         </div>
     </div>
 

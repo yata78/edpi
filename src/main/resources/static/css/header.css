@@ -1,0 +1,18 @@
+.header{
+    height:60px;
+    background: linear-gradient(90deg ,#000000, #800000);
+    color:#fff;
+    width:100%;
+    text-align: center;
+}
+
+.header nav {
+    display: flex;
+    justify-content: right;
+}
+
+.header-logo {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
