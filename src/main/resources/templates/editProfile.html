@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/editProfile.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
@@ -12,18 +13,28 @@
 
     <div th:replace="header"></div>
 
-    <form method="post" th:action="@{/editUser}" th:object="${MUser}">
-        <label for="userName">名前
-            <input type="text" id="userName" name="userName" th:value="*{userName}" th:field="*{userName}">
-        </label>
-        <p th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
+    <div class="login">
+        <div class="form">
 
-        <label for="email">メールアドレス
-            <input type="email" id="email" name="email" th:value="*{email}" th:field="*{email}"/>
-        </label>
-        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+        <form method="post" th:action="@{/editUser}" th:object="${MUser}">
 
-        <input type="submit" value="送信"></input>
-    </form>
+            <div class="form-group">
+                <label for="userName"><h4>名前</h4>
+                    <input type="text" id="userName" name="userName" th:value="*{userName}" th:field="*{userName}">
+                </label>
+                <p th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" class="text-danger"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="email"><h4>メールアドレス</h4>
+                    <input type="email" id="email" name="email" th:value="*{email}" th:field="*{email}"/>
+                </label>
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></p>
+            </div>
+
+            <button type="submit">更新</input>
+        </form>
+        </div>
+    </div> 
 </body>
 </html>

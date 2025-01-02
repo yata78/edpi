@@ -1,0 +1,143 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+.editEdpi-header {
+    text-align: center;
+    margin-top: 10%;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    color: #fff;
+  }
+
+body {
+  background: linear-gradient(90deg, #000000, #800000);
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #fff;
+}
+
+h2.index-header {
+  text-align: center;
+  color: #fff;
+  margin-top: 50px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background-color: #333;
+  border-radius: 8px;
+}
+
+th, td {
+  padding: 12px 15px;
+  border: 1px solid #444;
+}
+
+th {
+  background-color: #555;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+}
+
+td {
+  background-color: #222;
+  color: #fff;
+  text-align: left;
+}
+
+td button {
+  padding: 10px 15px;
+  background-color: #202f55;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+td button:hover {
+  background-color: #333;
+}
+
+.login {
+    width: 360px;
+    padding: 5% 0 0, 10%;
+    margin: auto;
+  }
+  .form {
+    position: relative;
+    z-index: 1;
+    background: #FFFFFF;
+    max-width: 360px;
+    margin: 50px auto 100px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  }
+  .form input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 50px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  .form button {
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #202f55;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+  }
+  .form button:hover,.form button:active,.form button:focus {
+    background: #202f55;
+  }
+  .form .message {
+    margin: 15px 0 0;
+    color: #b3b3b3;
+    font-size: 12px;
+  }
+  .form .message a {
+    color: #202f55;
+    text-decoration: none;
+  }
+  .form .register-form {
+    display: none;
+  }
+
+  form button {
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #202f55;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  form button:hover,
+  form button:active,
+  form button:focus {
+    background: #333;
+  }

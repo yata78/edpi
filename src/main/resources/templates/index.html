@@ -15,32 +15,36 @@
 
     <h2 class="index-header">EDPI画面</h2>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ゲーム内感度</th>
-                <th>dpi</th>
-                <th>勝率</th>
-                <th>HS率</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="dpis : ${dpiList}">
-                <form method="get" th:action="@{/editEdpi/{id}(id=${dpis.dpiId})}">
-                    <td th:text="${dpis.sensitivity}"></td>
-                    <td th:text="${dpis.dpi}"></td>
-                    <td th:text="${dpis.winRate} + '%'" ></td>
-                    <td th:text="${dpis.hsRate} + '%'" ></td>
-                    <input type="hidden" name="dpiId" th:value="${dpis.dpiId}">
-                    <td><button type="submit">戦績登録</button></td>
-                </form>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-container">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ゲーム内感度</th>
+                    <th>dpi</th>
+                    <th>勝率</th>
+                    <th>HS率</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="dpis : ${dpiList}">
+                    <form method="get" th:action="@{/editEdpi/{id}(id=${dpis.dpiId})}">
+                        <td th:text="${dpis.sensitivity}"></td>
+                        <td th:text="${dpis.dpi}"></td>
+                        <td th:text="${dpis.winRate} + '%'" ></td>
+                        <td th:text="${dpis.hsRate} + '%'" ></td>
+                        <input type="hidden" name="dpiId" th:value="${dpis.dpiId}">
+                        <td><button type="submit">戦績登録</button></td>
+                    </form>
+                </tr>
+            </tbody>
+        </table>
     
-    <form method="get" th:action="@{/registEdpi}">
-        <button>EDPI登録</button>
+    </div>
+    
+    <form method="get" th:action="@{/registEdpi}" class="registEdpi">
+        <button class="registEdpiButton">EDPI登録</button>
     </form>
     
 </body>

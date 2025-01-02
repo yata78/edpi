@@ -1,7 +1,9 @@
 package com.yatatsu.edpi.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -119,7 +121,30 @@ public class EditEdpiController {
 
         dpiRepository.saveAndFlush(edpi);
         
-        mav.setViewName("registEdpi");
+       //index.htmlに遷移
+       mav.setViewName("index");
+
+       //dpi・ゲーム内感度・勝率・HS率を取得
+            List<UsersDpi> dpi = dpiRepository.findByUserId((Integer)session.getAttribute("userId"));
+            
+            List<Map<String,Object>> dpiList = new ArrayList<>();
+
+            for (UsersDpi d : dpi) {
+                
+                //勝率とHS率を取得
+                String winRate =  matchRepository.countMatch(d.getDpiId()) > 0 ? String.format("%.1f", ((double)matchRepository.countWinMatch(d.getDpiId()) / matchRepository.countMatch(d.getDpiId())) * 100) : "0";
+                String hsRate = matchRepository.getAvgHsRate(d.getDpiId()) != null ? String.format("%.1f" ,matchRepository.getAvgHsRate(d.getDpiId())) : "0";
+                
+                dpiList.add(Map.of(
+                    "dpiId" , d.getDpiId(),
+                    "dpi"   , d.getDpi(),
+                    "sensitivity" , d.getSensitivity(),
+                    "winRate" , winRate,
+                    "hsRate" , hsRate 
+                ));
+            }
+
+            mav.addObject("dpiList", dpiList);
 
         return mav;
     }
