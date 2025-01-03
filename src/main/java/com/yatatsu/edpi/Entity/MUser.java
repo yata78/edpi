@@ -22,6 +22,7 @@ public class MUser {
     private Integer userId;
 
     @Column(name="user_name")
+    @NotBlank(message = "ユーザー名を入力してください")
     private String userName;
 
     @Column(name="email")

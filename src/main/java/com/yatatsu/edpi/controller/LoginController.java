@@ -56,23 +56,21 @@ public class LoginController {
             mav.setViewName("login");
             return mav;
         }
-        
-        // idとパスワードで分岐
-
-        System.out.println(user.getUserId());
-        
-        Optional<MUser> data = userRepository.findById(user.getUserId());
-        MUser Loginuser = data.get();
 
         try {
+
+            // ユーザ名とパスワードでユーザを取得
+            Optional<MUser> data = userRepository.findUserByNameAndEmail(user.getUserName(), user.getEmail());
+            
+            MUser Loginuser = data.get();
+
             //DBからユーザを取得できた場合
             mav.setViewName("index");
-            this.session.setAttribute("userId", user.getUserId());
-            this.session.setAttribute("email", user.getEmail());
-
+            this.session.setAttribute("userId", Loginuser.getUserId());
+            this.session.setAttribute("email", Loginuser.getEmail());
 
             //dpi・ゲーム内感度・勝率・HS率を取得
-            List<UsersDpi> dpi = dpiRepository.findByUserId(user.getUserId());
+            List<UsersDpi> dpi = dpiRepository.findByUserId(Loginuser.getUserId());
             
             List<Map<String,Object>> dpiList = new ArrayList<>();
 
@@ -95,7 +93,7 @@ public class LoginController {
         } catch (Exception e) {
             //DBからユーザを取得できなかった場合
             mav.setViewName("login");
-            mav.addObject("error", "名前もしくはパスワードが違います。");
+            mav.addObject("error", "ユーザ名もしくはパスワードが違います");
         }
         return mav; 
     }
