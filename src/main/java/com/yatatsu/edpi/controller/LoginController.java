@@ -41,6 +41,7 @@ public class LoginController {
         this.matchRepository = matchRepository;
     }
     
+    //ログイン画面を表示
     @RequestMapping("/")
     public ModelAndView getLogin(ModelAndView mav,@ModelAttribute("MUser") MUser user) {
         mav.setViewName("login");

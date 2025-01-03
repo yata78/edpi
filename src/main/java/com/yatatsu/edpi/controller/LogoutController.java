@@ -26,6 +26,7 @@ public class LogoutController {
         this.session = session;
     }
 
+    //ログアウト処理(セッションを無効化)
     @GetMapping("/logout")
     public String Logout(ModelAndView mav, @ModelAttribute("MUser") MUser user) {
         session.invalidate();

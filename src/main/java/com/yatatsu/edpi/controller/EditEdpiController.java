@@ -39,6 +39,7 @@ public class EditEdpiController {
     }
 
 
+    //EDPIの編集画面を表示
     @GetMapping("/editEdpi/{id}")
     public ModelAndView showDpi(ModelAndView mav, @RequestParam String dpiId, @ModelAttribute("MMatch") MMatch mMatch) {
 
@@ -50,7 +51,7 @@ public class EditEdpiController {
         return mav;
     }
     
-    // EDPIの勝敗とHS率を登録している
+    //EDPIの勝敗とHS率を登録
     @PostMapping("/editEdpi/{id}")
     public ModelAndView editDpi(ModelAndView mav, @RequestParam String winLose, @ModelAttribute("MMatch") @Validated MMatch mMatch, BindingResult bindingResult) {
 
@@ -98,13 +99,14 @@ public class EditEdpiController {
         return mav;
     }
     
-    //EDPIの組み合わせを登録
+    //EDPI登録画面を表示
     @GetMapping("/registEdpi")
     public ModelAndView registEdpi(ModelAndView mav, @ModelAttribute("UsersDpi") UsersDpi usersDpi) {
         mav.setViewName("registEdpi");
         return mav;
     }
 
+    //EDPIの組み合わせを登録
     @PostMapping("/registEdpi")
     public ModelAndView registEdpi(ModelAndView mav, @ModelAttribute("UsersDpi") @Validated UsersDpi usersDpi, BindingResult bindingResult) {
         
@@ -121,33 +123,31 @@ public class EditEdpiController {
 
         dpiRepository.saveAndFlush(edpi);
         
-       //index.htmlに遷移
        mav.setViewName("index");
 
        //dpi・ゲーム内感度・勝率・HS率を取得
-            List<UsersDpi> dpi = dpiRepository.findByUserId((Integer)session.getAttribute("userId"));
+        List<UsersDpi> dpi = dpiRepository.findByUserId((Integer)session.getAttribute("userId"));
+        
+        List<Map<String,Object>> dpiList = new ArrayList<>();
+
+        for (UsersDpi d : dpi) {
             
-            List<Map<String,Object>> dpiList = new ArrayList<>();
+            //勝率とHS率を取得
+            String winRate =  matchRepository.countMatch(d.getDpiId()) > 0 ? String.format("%.1f", ((double)matchRepository.countWinMatch(d.getDpiId()) / matchRepository.countMatch(d.getDpiId())) * 100) : "0";
+            String hsRate = matchRepository.getAvgHsRate(d.getDpiId()) != null ? String.format("%.1f" ,matchRepository.getAvgHsRate(d.getDpiId())) : "0";
+            
+            dpiList.add(Map.of(
+                "dpiId" , d.getDpiId(),
+                "dpi"   , d.getDpi(),
+                "sensitivity" , d.getSensitivity(),
+                "winRate" , winRate,
+                "hsRate" , hsRate 
+            ));
+        }
 
-            for (UsersDpi d : dpi) {
-                
-                //勝率とHS率を取得
-                String winRate =  matchRepository.countMatch(d.getDpiId()) > 0 ? String.format("%.1f", ((double)matchRepository.countWinMatch(d.getDpiId()) / matchRepository.countMatch(d.getDpiId())) * 100) : "0";
-                String hsRate = matchRepository.getAvgHsRate(d.getDpiId()) != null ? String.format("%.1f" ,matchRepository.getAvgHsRate(d.getDpiId())) : "0";
-                
-                dpiList.add(Map.of(
-                    "dpiId" , d.getDpiId(),
-                    "dpi"   , d.getDpi(),
-                    "sensitivity" , d.getSensitivity(),
-                    "winRate" , winRate,
-                    "hsRate" , hsRate 
-                ));
-            }
-
-            mav.addObject("dpiList", dpiList);
+        mav.addObject("dpiList", dpiList);
 
         return mav;
     }
     
-
 }
