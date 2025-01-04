@@ -10,6 +10,7 @@ import com.yatatsu.edpi.Entity.UsersDpi;
 @Repository
 public interface DpiRepository extends JpaRepository<UsersDpi , Integer>{
 
+    //userIdに紐づくDPIを取得
     @Query(value = "SELECT * FROM users_dpi WHERE user_id = ?1", nativeQuery = true)
     List<UsersDpi> findByUserId(Integer id);
 }

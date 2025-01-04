@@ -1,23 +1,19 @@
 package com.yatatsu.edpi.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yatatsu.edpi.Entity.MUser;
-import com.yatatsu.edpi.Entity.UsersDpi;
-import com.yatatsu.edpi.repository.DpiRepository;
-import com.yatatsu.edpi.repository.MatchRepository;
-import com.yatatsu.edpi.repository.UserRepository;
+import com.yatatsu.edpi.service.EdpiService;
+import com.yatatsu.edpi.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -29,16 +25,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class LoginController {
 
     private HttpSession session;
-    private UserRepository userRepository;
-    private DpiRepository dpiRepository;
-    private MatchRepository matchRepository;
+    private UserService userService;
+    private EdpiService edpiService;
 
     @Autowired
-    public LoginController(HttpSession session , UserRepository userRepository, DpiRepository dpiRepository , MatchRepository matchRepository) {
+    public LoginController(HttpSession session , UserService userService , EdpiService edpiService) {
         this.session = session;
-        this.userRepository = userRepository;
-        this.dpiRepository = dpiRepository;
-        this.matchRepository = matchRepository;
+        this.userService = userService;
+        this.edpiService = edpiService;
     }
     
     //ログイン画面を表示
@@ -48,6 +42,7 @@ public class LoginController {
         return mav;
     }
 
+    //ログイン処理
     @PostMapping("/login")
     public ModelAndView postLogin(ModelAndView mav,@ModelAttribute("MUser") @Validated MUser user, BindingResult bindingResult) {
         
@@ -59,42 +54,21 @@ public class LoginController {
         }
 
         try {
+            MUser loginUser = userService.getMUser(user.getUserName(), user.getEmail());
 
-            // ユーザ名とパスワードでユーザを取得
-            Optional<MUser> data = userRepository.findUserByNameAndEmail(user.getUserName(), user.getEmail());
-            
-            MUser Loginuser = data.get();
+            //DBからユーザを取得できた場合にセッションにユーザ情報をセット
+            this.session.setAttribute("userId", loginUser.getUserId());
+            this.session.setAttribute("email", loginUser.getEmail());
 
-            //DBからユーザを取得できた場合
-            mav.setViewName("index");
-            this.session.setAttribute("userId", Loginuser.getUserId());
-            this.session.setAttribute("email", Loginuser.getEmail());
-
-            //dpi・ゲーム内感度・勝率・HS率を取得
-            List<UsersDpi> dpi = dpiRepository.findByUserId(Loginuser.getUserId());
-            
-            List<Map<String,Object>> dpiList = new ArrayList<>();
-
-            for (UsersDpi d : dpi) {
-                
-                //勝率とHS率を取得
-                String winRate =  matchRepository.countMatch(d.getDpiId()) > 0 ? String.format("%.1f", ((double)matchRepository.countWinMatch(d.getDpiId()) / matchRepository.countMatch(d.getDpiId())) * 100) : "0";
-                String hsRate = matchRepository.getAvgHsRate(d.getDpiId()) != null ? String.format("%.1f" ,matchRepository.getAvgHsRate(d.getDpiId())) : "0";
-                
-                dpiList.add(Map.of(
-                    "dpiId" , d.getDpiId(),
-                    "dpi"   , d.getDpi(),
-                    "sensitivity" , d.getSensitivity(),
-                    "winRate" , winRate,
-                    "hsRate" , hsRate 
-                ));
-            }
+            //dpi・ゲーム内感度・勝率・HS率を取得 
+            List<Map<String,Object>> dpiList = edpiService.getEdpiList(user.getUserId());
 
             mav.addObject("dpiList", dpiList);
-        } catch (Exception e) {
+            mav.setViewName("index");
+        } catch (NoSuchElementException e) {
             //DBからユーザを取得できなかった場合
-            mav.setViewName("login");
             mav.addObject("error", "ユーザ名もしくはパスワードが違います");
+            mav.setViewName("login");
         }
         return mav; 
     }

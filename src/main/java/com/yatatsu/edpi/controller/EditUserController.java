@@ -1,7 +1,10 @@
 package com.yatatsu.edpi.controller;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -10,14 +13,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yatatsu.edpi.Entity.MUser;
-import com.yatatsu.edpi.repository.MatchRepository;
 import com.yatatsu.edpi.repository.UserRepository;
+import com.yatatsu.edpi.service.EdpiService;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -25,24 +27,26 @@ public class EditUserController {
 
     HttpSession session;
     UserRepository userRepository;
-    MatchRepository matchRepository;
+    EdpiService edpiService;
 
-    public EditUserController(HttpSession session, UserRepository userRepository, MatchRepository matchRepository) {
+    @Autowired
+    public EditUserController(HttpSession session, UserRepository userRepository, EdpiService edpiService) {
         this.session = session;
         this.userRepository = userRepository;
-        this.matchRepository = matchRepository;
+        this.edpiService = edpiService;
     }
     
+    //ユーザ情報編集画面を表示
     @GetMapping("/editUser")
     public ModelAndView editUser(ModelAndView mav, @ModelAttribute("MUser") MUser mUser) {
         Optional<MUser> data = userRepository.findById((Integer)session.getAttribute("userId"));
         MUser registUser = data.get();
-        //TODO:テーブルから取得する情報の吟味
         mav.addObject("user", registUser);
         mav.setViewName("editProfile");
         return mav;
     }
 
+    //ユーザ情報を更新
     @Transactional
     @PostMapping("/editUser")
     public ModelAndView postMethodName(@ModelAttribute("MUser") @Validated MUser mUser, BindingResult bindingResult, ModelAndView mav) {
@@ -53,11 +57,14 @@ public class EditUserController {
             return mav;
         }
 
+        //ユーザ情報を更新
         userRepository.updateData(mUser.getUserName(), mUser.getEmail());
-        Optional<MUser> data = userRepository.findById((Integer)session.getAttribute("userId"));
-        MUser updateUser = data.get();
-        mav.addObject("user", updateUser);
-        mav.setViewName("editProfile");
+
+        //dpi・ゲーム内感度・勝率・HS率を取得 
+        List<Map<String,Object>> dpiList = edpiService.getEdpiList((Integer)session.getAttribute("userId"));
+
+        mav.addObject("dpiList", dpiList);
+        mav.setViewName("index");
         return mav;
     }
     

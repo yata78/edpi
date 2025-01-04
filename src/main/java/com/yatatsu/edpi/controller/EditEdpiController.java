@@ -1,7 +1,5 @@
 package com.yatatsu.edpi.controller;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,12 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.yatatsu.edpi.Entity.MMatch;
 import com.yatatsu.edpi.Entity.UsersDpi;
-import com.yatatsu.edpi.repository.DpiRepository;
 import com.yatatsu.edpi.repository.MatchRepository;
 import com.yatatsu.edpi.repository.UserRepository;
+import com.yatatsu.edpi.service.EdpiService;
+import com.yatatsu.edpi.service.MatchService;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -30,12 +28,14 @@ public class EditEdpiController {
     
     HttpSession session;
     MatchRepository matchRepository;
-    DpiRepository dpiRepository;
+    EdpiService edpiService;
+    MatchService matchService;
 
-    public EditEdpiController(HttpSession session, UserRepository userRepository, MatchRepository matchRepository , DpiRepository dpiRepository) {
+    public EditEdpiController(HttpSession session, UserRepository userRepository, MatchRepository matchRepository , EdpiService edpiService, MatchService matchService) {
         this.session = session;
         this.matchRepository = matchRepository;
-        this.dpiRepository = dpiRepository;
+        this.edpiService = edpiService;
+        this.matchService = matchService;
     }
 
 
@@ -62,18 +62,9 @@ public class EditEdpiController {
             mav.setViewName("editEdpi");
             return mav;
         }
-        
+
         // 試合の結果を登録(勝敗とHS率)
-        MMatch registMatch = new MMatch();
-        registMatch.setDpiId(mMatch.getDpiId());
-        registMatch.setHsRate(mMatch.getHsRate());
-        registMatch.setUserId((Integer)session.getAttribute("userId"));
-        if(winLose.equals("1")) {
-            registMatch.setWin(true);
-        } else {
-            registMatch.setWin(false);
-        }
-        matchRepository.saveAndFlush(registMatch);
+        matchService.saveMatch(winLose, (Integer)session.getAttribute("userId"), mMatch);
 
         // 表示のために試合データを取得
         List<MMatch> getMMatch = matchRepository.findByMatchIdAndUserId(mMatch.getDpiId(), (Integer)session.getAttribute("userId"));
@@ -115,35 +106,14 @@ public class EditEdpiController {
             mav.setViewName("registEdpi");
             return mav;
         }
-        
-        UsersDpi edpi = new UsersDpi();
-        edpi.setDpi(usersDpi.getDpi());
-        edpi.setSensitivity(usersDpi.getSensitivity());
-        edpi.setUserId((Integer)session.getAttribute("userId"));
 
-        dpiRepository.saveAndFlush(edpi);
+        //edpiを登録
+        edpiService.saveEdpi((Integer)session.getAttribute("userId"), usersDpi);
         
-       mav.setViewName("index");
+        mav.setViewName("index");
 
-       //dpi・ゲーム内感度・勝率・HS率を取得
-        List<UsersDpi> dpi = dpiRepository.findByUserId((Integer)session.getAttribute("userId"));
-        
-        List<Map<String,Object>> dpiList = new ArrayList<>();
-
-        for (UsersDpi d : dpi) {
-            
-            //勝率とHS率を取得
-            String winRate =  matchRepository.countMatch(d.getDpiId()) > 0 ? String.format("%.1f", ((double)matchRepository.countWinMatch(d.getDpiId()) / matchRepository.countMatch(d.getDpiId())) * 100) : "0";
-            String hsRate = matchRepository.getAvgHsRate(d.getDpiId()) != null ? String.format("%.1f" ,matchRepository.getAvgHsRate(d.getDpiId())) : "0";
-            
-            dpiList.add(Map.of(
-                "dpiId" , d.getDpiId(),
-                "dpi"   , d.getDpi(),
-                "sensitivity" , d.getSensitivity(),
-                "winRate" , winRate,
-                "hsRate" , hsRate 
-            ));
-        }
+       //dpi・ゲーム内感度・勝率・HS率を取得        
+        List<Map<String,Object>> dpiList = edpiService.getEdpiList((Integer)session.getAttribute("userId"));
 
         mav.addObject("dpiList", dpiList);
 
