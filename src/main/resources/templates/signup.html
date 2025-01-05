@@ -15,7 +15,14 @@
     <div class="login">
         <div class="form">
 
+            
+
             <form method="post" th:action="@{/signup}" th:object="${MUser}">
+
+                <th:block th:if="${error}">
+                    <div style="color: red;" th:text="${error}"></div>
+                </th:block>
+
                 <label for="userName"><h4>ユーザ名</h4>
                     <input type="text" id="userName" name="userName">
                     <p th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" class="text-danger"></p>

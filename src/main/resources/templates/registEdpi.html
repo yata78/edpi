@@ -19,6 +19,11 @@
         <div class="form">
 
             <form method="post" th:action="@{/registEdpi}" th:object="${UsersDpi}">
+
+                <th:block th:if="${error}">
+                    <div style="color: red;" th:text="${error}"></div>
+                </th:block>
+
                 <label for="userName"><h4>dpi</h4>
                     <input type="number" id="dpi" name="dpi" min="0" step="100" th:field="*{dpi}">
                 </label>

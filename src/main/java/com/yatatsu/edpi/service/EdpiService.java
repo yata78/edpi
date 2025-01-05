@@ -1,12 +1,15 @@
 package com.yatatsu.edpi.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yatatsu.edpi.Entity.MUser;
 import com.yatatsu.edpi.Entity.UsersDpi;
 import com.yatatsu.edpi.repository.DpiRepository;
 import com.yatatsu.edpi.repository.MatchRepository;
@@ -23,6 +26,18 @@ public class EdpiService {
         this.matchRepository = matchRepository;
     }
     
+    //edpiの重複チェック
+    public boolean isAlredyRegistEdpi(Integer userId, Integer dpi, BigDecimal sensitivity) {
+
+        Optional<UsersDpi> data = dpiRepository.getEdpiByUserId(userId, dpi, sensitivity);
+
+        if (data.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public List<Map<String,Object>> getEdpiList(Integer userId) {
 
         //dpi・ゲーム内感度・勝率・HS率を取得

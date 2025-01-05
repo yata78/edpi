@@ -46,8 +46,15 @@ public class SignUpController {
             return mav;
         }
 
-        //ユーザ登録
-        userService.signUpUser(user.getUserName(), user.getEmail());
+        //ユーザの重複チェック
+        if (userService.isAlredyRegistUser(user.getUserName(), user.getEmail())) {
+            //ユーザ登録
+            userService.signUpUser(user.getUserName(), user.getEmail());
+        } else {
+            mav.addObject("error","既にユーザが存在します");
+            mav.setViewName("signup");
+            return mav;
+        }
         
         mav.setViewName("login");
         return mav;

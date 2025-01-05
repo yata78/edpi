@@ -107,8 +107,16 @@ public class EditEdpiController {
             return mav;
         }
 
-        //edpiを登録
-        edpiService.saveEdpi((Integer)session.getAttribute("userId"), usersDpi);
+        //edpiの重複チェック
+        if(edpiService.isAlredyRegistEdpi((Integer) session.getAttribute("userId"), usersDpi.getDpi(), usersDpi.getSensitivity())) {
+            //edpiを登録
+            edpiService.saveEdpi((Integer)session.getAttribute("userId"), usersDpi);
+        } else {
+            mav.addObject("error", "既に登録されています");
+            mav.setViewName("registEdpi");
+            return mav;
+        }
+
         
         mav.setViewName("index");
 

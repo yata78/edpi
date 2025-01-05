@@ -19,7 +19,19 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    // ユーザ名とパスワードでユーザを取得
+    //ユーザの重複チェック
+    public boolean isAlredyRegistUser(String userName, String email) {
+
+        Optional<MUser> data = userRepository.findUserByNameAndEmail(userName, email);
+
+        if (data.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //ユーザ名とパスワードでユーザを取得
     public MUser getMUser(String userName, String email) {
         
         Optional<MUser> data = userRepository.findUserByNameAndEmail(userName, email);
