@@ -36,9 +36,10 @@ public class EdpiServiceTest {
     @Test
     public void getEdpiListTest_正常系() {
 
-        int expectSize = 2;
+        int expectSize = 1;
         int expectDpiId = 1;
         int expectDpiValue1 = 800;
+        BigDecimal expectSensitivity = new BigDecimal(0.291);
 
         //返り値のテストデータ作成
         List<UsersDpi> expectDpi = new ArrayList<>();
@@ -49,14 +50,7 @@ public class EdpiServiceTest {
         dpi1.setDpi(800);
         dpi1.setSensitivity(new BigDecimal(0.291));
 
-        UsersDpi dpi2 = new UsersDpi();
-        dpi2.setDpiId(2);
-        dpi2.setUserId(1);
-        dpi2.setDpi(800);
-        dpi2.setSensitivity(new BigDecimal(0.350));
-
         expectDpi.add(dpi1);
-        expectDpi.add(dpi2);
 
         //モックの設定
         when(dpiRepository.findByUserId(1)).thenReturn(expectDpi);
@@ -71,5 +65,6 @@ public class EdpiServiceTest {
         assertEquals(expectSize, actualDpiList.size());
         assertEquals(expectDpiId, actualDpiList.get(0).get("dpiId"));
         assertEquals(expectDpiValue1, actualDpiList.get(0).get("dpi"));
+        assertEquals(expectSensitivity, actualDpiList.get(0).get("sensitivity"));
     }
 }
