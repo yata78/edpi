@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -29,6 +31,8 @@ public class EditUserController {
     UserRepository userRepository;
     EdpiService edpiService;
 
+    private static Logger logger = LoggerFactory.getLogger(EditUserController.class);
+
     @Autowired
     public EditUserController(HttpSession session, UserRepository userRepository, EdpiService edpiService) {
         this.session = session;
@@ -39,6 +43,9 @@ public class EditUserController {
     //ユーザ情報編集画面を表示
     @GetMapping("/editUser")
     public ModelAndView editUser(ModelAndView mav, @ModelAttribute("MUser") MUser mUser) {
+
+        logger.debug("EditUserControllerのeditUserメソッド(GET)が呼ばれました。");
+
         Optional<MUser> data = userRepository.findById((Integer)session.getAttribute("userId"));
         MUser registUser = data.get();
         mav.addObject("user", registUser);
@@ -51,8 +58,11 @@ public class EditUserController {
     @PostMapping("/editUser")
     public ModelAndView postMethodName(@ModelAttribute("MUser") @Validated MUser mUser, BindingResult bindingResult, ModelAndView mav) {
 
+        logger.debug("EditUserControllerのpostMethodNameメソッド(POST)が呼ばれました。");
+
         //バリデーションチェック
         if (bindingResult.hasErrors()) {
+            logger.error("バリデーションエラーが発生しました");
             mav.setViewName("editProfile");
             return mav;
         }

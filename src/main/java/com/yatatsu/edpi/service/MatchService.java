@@ -29,6 +29,5 @@ public class MatchService {
             registMatch.setWin(false);
         }
         matchRepository.saveAndFlush(registMatch);
-        
     }
 }

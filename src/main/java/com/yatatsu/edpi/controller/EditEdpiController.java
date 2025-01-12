@@ -3,6 +3,8 @@ package com.yatatsu.edpi.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +33,8 @@ public class EditEdpiController {
     EdpiService edpiService;
     MatchService matchService;
 
+    private static final Logger logger = LoggerFactory.getLogger(EditEdpiController.class);
+
     public EditEdpiController(HttpSession session, UserRepository userRepository, MatchRepository matchRepository , EdpiService edpiService, MatchService matchService) {
         this.session = session;
         this.matchRepository = matchRepository;
@@ -42,6 +46,8 @@ public class EditEdpiController {
     //EDPIの編集画面を表示
     @GetMapping("/editEdpi/{id}")
     public ModelAndView showDpi(ModelAndView mav, @RequestParam String dpiId, @ModelAttribute("MMatch") MMatch mMatch) {
+
+        logger.debug("EditEdpiControllerのshowDpiメソッド(GET)が呼ばれました。");
 
         List<MMatch> getMMatch = matchRepository.findByMatchIdAndUserId(Integer.parseInt(dpiId), (Integer)session.getAttribute("userId"));
         mav.addObject("dpiId", dpiId);
@@ -55,8 +61,11 @@ public class EditEdpiController {
     @PostMapping("/editEdpi/{id}")
     public ModelAndView editDpi(ModelAndView mav, @RequestParam String winLose, @ModelAttribute("MMatch") @Validated MMatch mMatch, BindingResult bindingResult) {
 
+        logger.debug("EditEdpiControllerのeditDpiメソッド(POST)が呼ばれました。");
+
         //バリデーションチェック
         if (bindingResult.hasErrors()) {
+            logger.error("バリデーションエラーが発生しました");
             List<MMatch> getMMatch = matchRepository.findByMatchIdAndUserId(mMatch.getDpiId(), (Integer)session.getAttribute("userId"));
             mav.addObject("matchList", getMMatch);
             mav.setViewName("editEdpi");
@@ -78,6 +87,9 @@ public class EditEdpiController {
     //登録した試合データを削除
     @GetMapping("deleteMatch/{matchId}")
     public ModelAndView deleteMatch(ModelAndView mav , @PathVariable Integer matchId , @RequestParam String dpiId) {
+
+        logger.debug("EditEdpiControllerのdeleteMatchメソッド(GET)が呼ばれました。");
+
         //削除処理
         matchRepository.deleteById(matchId);
 
@@ -93,6 +105,9 @@ public class EditEdpiController {
     //EDPI登録画面を表示
     @GetMapping("/registEdpi")
     public ModelAndView registEdpi(ModelAndView mav, @ModelAttribute("UsersDpi") UsersDpi usersDpi) {
+
+        logger.debug("EditEdpiControllerのregistEdpiメソッド(GET)が呼ばれました。");
+
         mav.setViewName("registEdpi");
         return mav;
     }
@@ -100,9 +115,12 @@ public class EditEdpiController {
     //EDPIの組み合わせを登録
     @PostMapping("/registEdpi")
     public ModelAndView registEdpi(ModelAndView mav, @ModelAttribute("UsersDpi") @Validated UsersDpi usersDpi, BindingResult bindingResult) {
+
+        logger.debug("EditEdpiControllerのregistEdpiメソッド(POST)が呼ばれました。");
         
         //バリデーションチェック
         if(bindingResult.hasErrors()) {
+            logger.error("バリデーションエラーが発生しました");
             mav.setViewName("registEdpi");
             return mav;
         }
@@ -112,6 +130,7 @@ public class EditEdpiController {
             //edpiを登録
             edpiService.saveEdpi((Integer)session.getAttribute("userId"), usersDpi);
         } else {
+            logger.error("edpiの重複が発生しました");
             mav.addObject("error", "既に登録されています");
             mav.setViewName("registEdpi");
             return mav;

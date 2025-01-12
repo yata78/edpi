@@ -13,7 +13,7 @@ import com.yatatsu.edpi.Entity.UsersDpi;
 public interface DpiRepository extends JpaRepository<UsersDpi , Integer>{
 
     //dpiとゲーム内感度の組み合わせを取得
-    @Query(value = "SELECT * FROM user_id WHERE user_id = ?1 AND dpi = ?2 AND sensitivity = ?3" , nativeQuery = true)
+    @Query(value = "SELECT * FROM users_dpi WHERE user_id = ?1 AND dpi = ?2 AND sensitivity = ?3" , nativeQuery = true)
     Optional<UsersDpi> getEdpiByUserId(Integer userId, Integer dpi, BigDecimal sensitivity);
 
     //userIdに紐づくDPIを取得

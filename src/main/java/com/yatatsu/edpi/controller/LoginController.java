@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,6 +30,8 @@ public class LoginController {
     private UserService userService;
     private EdpiService edpiService;
 
+    private static Logger logger = LoggerFactory.getLogger(LoginController.class);
+
     @Autowired
     public LoginController(HttpSession session , UserService userService , EdpiService edpiService) {
         this.session = session;
@@ -38,6 +42,9 @@ public class LoginController {
     //ログイン画面を表示
     @RequestMapping("/")
     public ModelAndView getLogin(ModelAndView mav,@ModelAttribute("MUser") MUser user) {
+
+        logger.debug("LoginControllerのgetLoginメソッド(GET)が呼ばれました。");
+
         mav.setViewName("login");
         return mav;
     }
@@ -45,9 +52,12 @@ public class LoginController {
     //ログイン処理
     @PostMapping("/login")
     public ModelAndView postLogin(ModelAndView mav,@ModelAttribute("MUser") @Validated MUser user, BindingResult bindingResult) {
+
+        logger.debug("LoginControllerのpostLoginメソッド(POST)が呼ばれました。");
         
         //バリデーションチェック
         if(bindingResult.hasErrors()) {
+            logger.error("バリデーションエラーが発生しました");
             System.out.println(bindingResult.getAllErrors());
             mav.setViewName("login");
             return mav;
