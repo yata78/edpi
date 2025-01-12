@@ -27,5 +27,5 @@
 ## 環境構築 (Setup)
 1. **リポジトリのクローン**
    ```bash
-   git clone https://github.com/yourusername/your-repository.git
-   cd your-repository
+   git clone https://github.com/yata78/edpi.git
+   cd edpi
