@@ -19,10 +19,10 @@
 
 ## 使用技術 (Technologies Used)
 - **バックエンド:** Spring Boot, Java 17
-- **フロントエンド:** HTML, CSS, JavaScript
+- **フロントエンド:** HTML, CSS, JavaScript(予定)
 - **データベース:** PostgreSQL
 - **ビルドツール:** Maven
-- **デプロイ:** AWS
+- **デプロイ:** AWS (EC2, RDS)
 - **URL:** http://35.77.222.225:8080/
 
 ## 環境構築 (Setup)
