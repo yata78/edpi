@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -18,19 +16,20 @@ import com.yatatsu.edpi.service.EdpiService;
 import com.yatatsu.edpi.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.log4j.Log4j2;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
 @Controller
+@Log4j2
 public class LoginController {
 
     private HttpSession session;
     private UserService userService;
     private EdpiService edpiService;
-
-    private static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     public LoginController(HttpSession session , UserService userService , EdpiService edpiService) {
@@ -43,21 +42,37 @@ public class LoginController {
     @RequestMapping("/")
     public ModelAndView getLogin(ModelAndView mav,@ModelAttribute("MUser") MUser user) {
 
-        logger.debug("LoginControllerのgetLoginメソッド(GET)が呼ばれました。");
+        log.debug("LoginControllerのgetLoginメソッド(GET)が呼ばれました。");
 
         mav.setViewName("login");
         return mav;
+    }
+
+    //ホーム画面遷移
+    @GetMapping("/login")
+    public ModelAndView getLogin(ModelAndView mav,@ModelAttribute("MUser") @Validated MUser user, BindingResult bindingResult) {
+
+        log.info("LoginControllerのpostLoginメソッド(Get)が呼ばれました。");
+
+        //dpi・ゲーム内感度・勝率・HS率を取得 
+        List<Map<String,Object>> dpiList = edpiService.getEdpiList((Integer)session.getAttribute("userId"));
+
+        log.info("userId:" + (Integer)session.getAttribute("userId"));
+
+        mav.addObject("dpiList", dpiList);
+        mav.setViewName("index");
+        return mav; 
     }
 
     //ログイン処理
     @PostMapping("/login")
     public ModelAndView postLogin(ModelAndView mav,@ModelAttribute("MUser") @Validated MUser user, BindingResult bindingResult) {
 
-        logger.debug("LoginControllerのpostLoginメソッド(POST)が呼ばれました。");
+        log.info("LoginControllerのpostLoginメソッド(POST)が呼ばれました。");
         
         //バリデーションチェック
         if(bindingResult.hasErrors()) {
-            logger.error("バリデーションエラーが発生しました");
+            log.error("バリデーションエラーが発生しました");
             System.out.println(bindingResult.getAllErrors());
             mav.setViewName("login");
             return mav;
@@ -71,10 +86,13 @@ public class LoginController {
             this.session.setAttribute("email", loginUser.getEmail());
 
             //dpi・ゲーム内感度・勝率・HS率を取得 
-            List<Map<String,Object>> dpiList = edpiService.getEdpiList(user.getUserId());
+            List<Map<String,Object>> dpiList = edpiService.getEdpiList((Integer)session.getAttribute("userId"));
+
+            log.debug("userId:" + loginUser.getUserId());
 
             mav.addObject("dpiList", dpiList);
             mav.setViewName("index");
+
         } catch (NoSuchElementException e) {
             //DBからユーザを取得できなかった場合
             mav.addObject("error", "ユーザ名もしくはパスワードが違います");

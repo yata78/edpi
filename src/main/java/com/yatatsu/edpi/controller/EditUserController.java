@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,18 +18,18 @@ import com.yatatsu.edpi.service.EdpiService;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 
 import org.springframework.web.bind.annotation.PostMapping;
 
 
 @Controller
+@Log4j2
 public class EditUserController {
 
     HttpSession session;
     UserRepository userRepository;
     EdpiService edpiService;
-
-    private static Logger logger = LoggerFactory.getLogger(EditUserController.class);
 
     @Autowired
     public EditUserController(HttpSession session, UserRepository userRepository, EdpiService edpiService) {
@@ -44,7 +42,7 @@ public class EditUserController {
     @GetMapping("/editUser")
     public ModelAndView editUser(ModelAndView mav, @ModelAttribute("MUser") MUser mUser) {
 
-        logger.debug("EditUserControllerのeditUserメソッド(GET)が呼ばれました。");
+        log.info("EditUserControllerのeditUserメソッド(GET)が呼ばれました。");
 
         Optional<MUser> data = userRepository.findById((Integer)session.getAttribute("userId"));
         MUser registUser = data.get();
@@ -58,11 +56,11 @@ public class EditUserController {
     @PostMapping("/editUser")
     public ModelAndView postMethodName(@ModelAttribute("MUser") @Validated MUser mUser, BindingResult bindingResult, ModelAndView mav) {
 
-        logger.debug("EditUserControllerのpostMethodNameメソッド(POST)が呼ばれました。");
+        log.info("EditUserControllerのpostMethodNameメソッド(POST)が呼ばれました。");
 
         //バリデーションチェック
         if (bindingResult.hasErrors()) {
-            logger.error("バリデーションエラーが発生しました");
+            log.error("バリデーションエラーが発生しました");
             mav.setViewName("editProfile");
             return mav;
         }

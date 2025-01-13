@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,11 +17,10 @@ import com.yatatsu.edpi.Entity.MUser;
 
 
 @Controller
+@Log4j2
 public class LogoutController {
     
     private HttpSession session;
-
-    private static Logger logger = LoggerFactory.getLogger(LogoutController.class);
 
     @Autowired
     public LogoutController(HttpSession session) {
@@ -30,7 +31,7 @@ public class LogoutController {
     @GetMapping("/logout")
     public String Logout(ModelAndView mav, @ModelAttribute("MUser") MUser user) {
 
-        logger.debug("LogoutControllerのLogoutメソッド(GET)が呼ばれました。");
+        log.info("LogoutControllerのLogoutメソッド(GET)が呼ばれました。");
 
         session.invalidate();
         return "redirect:/";

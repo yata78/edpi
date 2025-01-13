@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yatatsu.edpi.Entity.MUser;
 import com.yatatsu.edpi.Entity.UsersDpi;
 import com.yatatsu.edpi.repository.DpiRepository;
 import com.yatatsu.edpi.repository.MatchRepository;
@@ -51,7 +50,7 @@ public class EdpiService {
             //勝率を取得できない場合は0を返す
             String winRate =  matchRepository.countMatch(d.getDpiId()) > 0 ? String.format("%.1f", ((double)matchRepository.countWinMatch(d.getDpiId()) / matchRepository.countMatch(d.getDpiId())) * 100) : "0";
             //HS率を取得できない場合は0を返す
-            String hsRate = matchRepository.getAvgHsRate(d.getDpiId()) == null ? String.format("%.1f" ,matchRepository.getAvgHsRate(d.getDpiId())) : "0";
+            String hsRate = matchRepository.getAvgHsRate(d.getDpiId()) != null ? String.format("%.1f" ,matchRepository.getAvgHsRate(d.getDpiId())) : "0";
             
             dpiList.add(Map.of(
                 "dpiId" , d.getDpiId(),
